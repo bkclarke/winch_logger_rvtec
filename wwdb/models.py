@@ -195,7 +195,7 @@ class Cast(models.Model):
         try:
             conn = mysql.connector.connect(host='127.0.0.1',
                 user='root',
-                password='b1uz00!!2SQ',
+                password='67Giffordstreet!',
                 database='winch_data'
             )
 
