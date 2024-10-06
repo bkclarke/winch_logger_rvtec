@@ -1,0 +1,16 @@
+﻿<!--templates/cutbackreterminationedit.html-->
+{% extends "wwdb/base.html" %}
+{% load bootstrap4 %}
+{{ form.media }}
+
+{% block content %}
+<h1>Edit Cutback or Retermination</h1>
+</br>
+<h4>See database manager to edit wire length or wet end tag value</h4>
+</br>
+<form action="" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" value="update">
+</form>
+{% endblock content %}

@@ -1,0 +1,39 @@
+<!--template/cruiselist.html-->
+{% extends "wwdb/base.html" %}
+
+{% block content %}
+<div class="container p-5">
+    <h2>Cruises</h2>
+    <br />
+    <table id="table" class="display nowrap" style="width:100%">
+        <thead class="thead-light">
+            <tr>
+                <th>Cruise number</th>
+                <th>Start date</th>
+                <th>End date</th>
+            </tr>
+        </thead>
+        {% for cruise in cruises %}
+        <tr>
+            <td><a href="{% url 'cruisereport' cruise.pk %}">{{cruise.number}}</a></td>
+            <td>{{cruise.format_startdate}}</td>
+            <td>{{cruise.format_enddate}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        // Initialize DataTables
+        $('#table').DataTable({
+            responsive: true,
+            scrollX: true,
+            order: [[0, "desc"]]
+            // Add more options as needed
+        });
+
+        // Initialize tooltips (assuming you're using Bootstrap tooltips)
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,31 @@
+﻿<!--template/home.html-->
+<!DOCTYPE html>
+{% extends "wwdb/base.html" %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-image: url("/static/img/home_background.jpg");
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        position: relative;
+    }
+</style>
+<body>
+    <div class="home-container">
+        {% if last.enddate %}
+        <button type="button" class="btn home-btn-startcast">
+            <a class="button-link" href="{% url 'caststart' %}">Start Cast</a>
+        </button>
+        {% else %}
+        <button type="button" class="btn home-btn-startcast">
+            <a class="button-link" href="{% url 'cast_end' %}">Cast in progess - click here to End Cast</a>
+        </button>
+        {% endif %}
+    </div>
+</body>
+
+{% endblock content %}

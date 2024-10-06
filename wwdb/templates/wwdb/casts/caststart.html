@@ -1,0 +1,48 @@
+﻿<!--templates/caststart.html-->
+{% extends "wwdb/base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+{{ form.media }}
+
+{% block content %}
+<h1>Start Cast</h1>
+<div class="container pt-2 pb-2 pl-5 pr-5">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <p>Operator</p>
+        <div class="fieldWrapper">
+            {{ form.startoperator.errors }}
+            {{ form.startoperator }}
+        </div>
+        </br>
+        <p>Deployment type</p>
+        <div>
+            {{ form.deploymenttype.errors }}
+            {{ form.deploymenttype }}
+        </div>
+        </br>
+        <p>Winch</p>
+        <div class="fieldWrapper">
+            {{ form.winch.errors }}
+            {{ form.winch }}
+        </div>
+        </br>
+        <p>Notes</p>
+        <div class="">
+            {{ form.notes.errors }}
+            {{ form.notes }}
+        </div>
+        </br>
+        <button class="cast-start-btn" type="submit" value="save">START CAST</button>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("form").on("submit", function () {
+            $("input[type=submit]").attr("disabled", true);
+            return true;
+        });
+    });
+</script>
+{% endblock content %}

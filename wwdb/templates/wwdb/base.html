@@ -1,0 +1,129 @@
+﻿<!--template/base.html-->
+<!DOCTYPE html>
+
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static 'css/bootstrap.min.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/bootstrap.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/bootstrap-datepicker.min.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/bootstrap-icons.min.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/datatables.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/buttons.datatables.min.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/wwdb.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/all.min.css' %}>
+    <script type="text/javascript" src={% static 'admin/js/vendor/jquery/jquery.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/Chart.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/highcharts.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/exporting.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/bootstrap.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/popper.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/moment.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/bootstrap-datepicker.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/datatables.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/dataTables.buttons.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/datetime-moment.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/jszip.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/pdfmake.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/buttons.html5.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/buttons.print.min.js' %} crossorigin="anonymous"></script>
+    <script type="text/javascript" src={% static 'js/htmx.min.js' %} crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('htmx:afterRequest', function (evt) {
+            $('table.display').DataTable({
+                retrieve: true,
+                responsive: true
+            });
+        });
+    </script>
+    {{form.media}}
+</head>
+
+
+<body>
+    {% if template_name != 'caststart.html' and template_name != 'castend.html' and template_name != 'home.html' %}
+    <div class="top-button-container stickey-top">
+        {% if last.enddate %}
+        <button type="button" class="btn btn-startcast">
+            <a class="button-link" href="{% url 'caststart' %}">Start Cast</a>
+        </button>
+        {% else %}
+        <button type="button" class="btn btn-startcast">
+            <a class="button-link" href="{% url 'cast_end' %}">Cast in progess - click here to End Cast</a>
+        </button>
+        {% endif %}
+    </div>
+    {% endif %}
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+        <a href="{% url 'home' %}">
+            <img src='/static/img/wire_logo.png' alt="Logo" class="logo" />
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'cruiseconfigurehome' %}">
+                        Configuration
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Reports
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'castreport' %}">Casts</a>
+                        <a class="dropdown-item" href="{% url 'cruiselist' %}">Cruises</a>
+                        <a class="dropdown-item" href="{% url 'safeworkingtensions' %}">Safe working tensions</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Maintenance
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'cutbackreterminationlist' %}">Cutbacks/reterminations</a>
+                        <a class="dropdown-item" href="{% url 'breaktestlist' %}">Breaktests</a>
+                        <a class="dropdown-item" href="{% url 'lubricationlist' %}">Lubrications</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Inventories
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'wirelist' %}">Tension members</a>
+                        <a class="dropdown-item" href="{% url 'wireropedatalist' %}">Wire data</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5 mb-5">
+        {% block content %}
+        {% endblock content %}
+        </br>
+        </br>
+    </div>
+    <nav class="navbar fixed-bottom navbar-expand-sm navbar-light">
+    </nav>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $('#startcast').click(function () {
+            window.location.href = "{% url 'caststart' %}";
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#endcast').click(function () {
+            window.location.href = "{% url 'caststart' %}";
+        });
+    });
+
+</script>
+
+

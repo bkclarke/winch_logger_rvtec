@@ -1,0 +1,54 @@
+﻿<!--template/wireinventory.html-->
+<!DOCTYPE html>
+{% extends "wwdb/base.html" %}
+
+{% block content %}
+<h2>Cutbacks and reterminations</h2>
+</br>
+<button id="cutbackreterminationadd" class="btn btn-outline-wwdb">Add cutback</button>
+</br>
+</br>
+<table id="table" class="display nowrap" style="width:100%">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Wire</th>
+            <th>Wet end tag</th>
+            <th>Dry end tag</th>
+            <th>Length after cutback</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    {% for cutbackretermination in cutbacks_reterminations %}
+    <tr>
+        <td><a href="{% url 'cutbackreterminationedit' cutbackretermination.pk %}">{{cutbackretermination.format_date}}</a></td>
+        <td>{{cutbackretermination.wire}}</td>
+        <td>{{cutbackretermination.wetendtag}}</td>
+        <td>{{cutbackretermination.dryendtag}}</td>
+        <td>{{cutbackretermination.lengthaftercutback}}</td>
+        <td>{{cutbackretermination.notes}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<script>
+    $(document).ready(function () {
+        // Initialize DataTables
+        $('#table').DataTable({
+            responsive: true,
+            scrollX: true,
+            order: [[0, "desc"]]
+            // Add more options as needed
+        });
+
+        // Initialize tooltips (assuming you're using Bootstrap tooltips)
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#cutbackreterminationadd').click(function () {
+            window.location.href = "{% url 'cutbackreterminationadd' %}";
+        });
+    });
+</script>
+{% endblock %}

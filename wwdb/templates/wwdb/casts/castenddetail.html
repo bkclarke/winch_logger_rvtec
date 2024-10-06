@@ -1,0 +1,29 @@
+﻿<!--template/castenddetail.html-->
+{% extends "wwdb/base.html" %}
+
+{% block content %}
+<header>
+    <h1>Cast ended successfully</h1>
+</header>
+<div class="cast-entry">
+    <p>Wire: {{cast.wire}}</p>
+    <p>Start cast operator: {{cast.startoperator}}</p>
+    <p>End cast opertor: {{cast.endoperator}}</p>
+    <p>Start date: {{cast.startdate}}</p>
+    <p>End date: {{cast.enddate}}</p>
+    <p>Deployment type: {{cast.deploymenttype}}</p>
+    <p>Winch: {{cast.winch}}</p>
+    <p>Notes: {{cast.notes}}</p>
+    <p>Max tension: {{cast.maxtension}}</p>
+    <p>Max payout: {{cast.maxpayout}}</p>
+    <p>Payout at maxtension: {{cast.payoutmaxtension}}</p>
+    <p>Time at maxtension: {{cast.timemaxtension}}</p>
+    <p>Meter at maxtension: {{cast.metermaxtension}}</p>
+    <p>Dry end tag: {{cast.dryendtag}}</p>
+    <p>Wet end tag: {{cast.wetendtag}}</p>
+    <p>Wire length: {{cast.wirelength}}</p>
+    <p>Wire rinse: {{cast.wirerinse}}</p>
+    <p>Factor of safety: {{cast.factorofsafety}}</p>
+    <p>Safe working tension: {{cast.safeworkingtension}}</p>
+</div>
+{% endblock content %}

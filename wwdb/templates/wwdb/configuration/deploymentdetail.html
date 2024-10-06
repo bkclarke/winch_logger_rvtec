@@ -1,0 +1,12 @@
+﻿<!--templates/deploymentsdetail.html-->
+{% extends "wwdb/base.html" %}
+
+{% block content %}
+<div class="deploymenttype-entry">
+    <h2>{{deploymenttype.name}}</h2>
+    <p>Equipment: {{deploymenttype.equipment}}</p>
+    <p>Notes: {{deploymenttype.notes}}</p>
+    <p>Status: {{deploymenttype.status}}</p>
+</div>
+<a href="{% url 'deploymentedit' deploymenttype.pk %}"> Edit Deployment</a>
+{% endblock content %}

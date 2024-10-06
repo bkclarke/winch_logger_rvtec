@@ -1,0 +1,21 @@
+﻿<!--templates/castdetail.html-->
+{% extends "wwdb/base.html" %}
+
+{% block content %}
+<div class="cast-entry">
+    <p>Cruise number: {{cast.cruisnumber}}</p>
+    <p>Wire: {{cast.wire}}</p>
+    <p>Start operator: {{cast.startoperatorid}}</p>
+    <p>End operator: {{cast.endoperatorid}}</p>
+    <p>Start date: {{cast.startdate}}</p>
+    <p>End date: {{cast.enddate}}</p>
+    <p>Deployment type: {{cast.deploymenttypeid}}</p>
+    <p>Winch: {{cast.winchid}}</p>
+    <p>Notes: {{cast.notes}}</p>
+    <p>Max tension: {{cast.maxtension}}</p>
+    <p>Max payout: {{cast.maxpayout}}</p>
+</div>
+<ul>
+    <a href="{% url 'castedit' cast.pk %}"> Edit Cast</a>
+</ul>
+{% endblock content %}
