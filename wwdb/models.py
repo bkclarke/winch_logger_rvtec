@@ -13,6 +13,45 @@ import pandas as pd
 import mysql.connector
 import random
 
+def random_cast_picker(deployment):
+    print(deployment)
+
+    CTD_list=[
+        ['2024-10-02 11:16:50','2024-10-02 11:36:45'],
+        ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
+        ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
+        ['2024-10-02 10:10:29','2024-10-02 10:27:29']
+    ]
+
+    Towsled_list=[
+        ['2024-10-02 11:16:50','2024-10-02 11:36:45'],
+        ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
+        ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
+        ['2024-10-02 10:10:29','2024-10-02 10:27:29']
+    ]
+
+    Bongos_list=[
+        ['2024-10-02 11:16:50','2024-10-02 11:36:45'],
+        ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
+        ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
+        ['2024-10-02 10:10:29','2024-10-02 10:27:29']
+    ]
+
+    def date_picker(deployment_list):
+        return random.choice(deployment_list)
+
+
+    if deployment == 'CTD':
+        dates = date_picker(CTD_list)
+    elif deployment == 'Bongos':
+        dates = date_picker(bongos_list)
+    elif deployment == 'Towsled':
+        dates = date_picker(towsled_list)
+    else:
+        print("Invalid deployment type")
+        return None
+
+    return dates 
 
 def validate_commas(value):
     if "," in value:
@@ -192,6 +231,7 @@ class Cast(models.Model):
 
     def endcastcal(self):
         winch=(self.winch.name)
+
         try:
             conn = mysql.connector.connect(host='127.0.0.1',
                 user='root',
@@ -243,17 +283,16 @@ class Cast(models.Model):
             return
 
     def startcast_get_datetime(self):
-            ctd_datetimes=[
-                ['2024-10-02 11:16:50','2024-10-02 11:36:45'],
-                ['2024-10-02 10:47:02','2024-10-02 11:02:36'],
-                ['2024-10-02 10:10:29','2024-10-02 10:27:29']
-]
-            random_cast = random.choice(ctd_datetimes)
-
-            self.startdate = random_cast[0]
-            print(self.startdate)
-            self.enddate = random_cast[1]
-            print(self.enddate)
+            deployment=self.deploymenttype.name
+            dates = random_cast_picker(deployment)
+            print(dates)
+            if dates:
+                self.startdate = dates[0]
+                print(self.startdate)
+                self.enddate = dates[1]
+                print(self.enddate)
+            else:
+                print("No dates found.")
 
     def get_cast_duration(self):
         if self.enddate and self.startdate:

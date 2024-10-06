@@ -27,6 +27,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 import io
 from datetime import datetime
 from django.contrib.auth import logout
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +57,7 @@ def caststart(request):
             cast=Cast.objects.last()
             cast.refresh_from_db()
             cast.get_active_wire()
+
             if cast.startdate == None:
                 cast.startcast_get_datetime()
             cast.save()
