@@ -777,6 +777,7 @@ def safeworkingtensions_file(request):
     lines = []
     
     #wire objects where status=True, ordered by winch name in ascending order
+    wires = Wire.objects.all()
     active_wire = [wire for wire in wires if wire.active_winch is not None]
     
     #Define stylesheet for headers
