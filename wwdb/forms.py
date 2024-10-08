@@ -121,7 +121,6 @@ class EndCastForm(ModelForm):
   
         fields = [
             'endoperator',
-            'enddate',
             'notes',
             'wirerinse',
             'flagforreview',
