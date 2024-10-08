@@ -23,6 +23,7 @@ urlpatterns = [
 
     #URLS related to configuration
     path('configuration/cruiseadd/', views.cruiseadd, name='cruiseadd'),
+    path('configuration/<int:pk>/delete/', CruiseDelete.as_view(), name='cruisedelete'),
     path('configuration/cruise/<int:id>/edit/', views.cruiseedit, name='cruiseedit'),
     path('configuration/cruiseconfiguration/', views.cruiseconfigurehome, name='cruiseconfigurehome'),
     path('configuration/cruisetablelistget', cruisetablelistget, name='cruisetablelistget'),
@@ -105,10 +106,12 @@ urlpatterns = [
     path('maintenance/cutbackretermination/<int:pk>/deploymentdetail', CutbackReterminationDetail.as_view(), name='cutbackreterminationdetail'),
     path('maintenance/cutbackretermination/<int:id>/edit/', views.cutbackreterminationedit, name='cutbackreterminationedit'),
     path('maintenance/cutbackreterminationadd/', views.cutbackreterminationadd, name='cutbackreterminationadd'),
+    path('maintenance/cutbackretermination/<int:pk>/delete/', CutbackreterminationDelete.as_view(), name='cutbackreterminationdelete'),
     path('maintenance/breaktestadd/', views.breaktestadd, name='breaktestadd'),
     path('maintenance/breaktest/<int:id>/edit/', views.breaktestedit, name='breaktestedit'),
     path('maintenance/breaktestlist', views.breaktestlist, name='breaktestlist'),
     path('maintenance/breaktest/<int:pk>/breaktestdetail', views.breaktestdetail, name='breaktestdetail'),
+    path('maintenance/breaktest/<int:pk>/delete/', BreaktestDelete.as_view(), name='breaktestdelete'),
     path('maintenance/lubricationadd/', views.lubricationadd, name='lubricationadd'),
     path('maintenance/lubrication/<int:id>/edit/', views.lubricationedit, name='lubricationedit'),
     path('maintenance/lubricationlist', views.lubricationlist, name='lubricationlist'),
@@ -125,4 +128,5 @@ urlpatterns = [
     path('<int:pk>/cruise_report_file', views.cruise_report_file, name='cruise_report_file'),
     path('reports/<int:pk>/wirereport/', views.wirereport, name='wirereport'),
     path('reports/castreport/', views.castreport, name='castreport'),
+    path('reports/charts/', charts, name='charts'),
 ]
