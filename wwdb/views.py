@@ -38,7 +38,7 @@ def get_data_from_external_db(start_date, end_date, winch):
         conn = mysql.connector.connect(
             host='127.0.0.1',
             user='root',
-            password='b1uz00!!2SQ',
+            password='67Giffordstreet!',
             database='winch_data'
         )
 
