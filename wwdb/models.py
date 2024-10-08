@@ -200,6 +200,27 @@ class Cast(models.Model):
             date=self.startdate
             formatdate=date.strftime("%Y-%m-%d, %H:%M:%S")
             return formatdate
+        
+    @property
+    def format_startdate_csv(self):
+        if self.startdate:
+            date=self.startdate
+            formatdate=date.strftime("%Y-%m-%d %H:%M:%S")
+            return formatdate
+
+    @property
+    def format_startdate_url(self):
+        if self.startdate:
+            date=self.startdate
+            formatdate=date.strftime("%Y-%m-%d")
+            return formatdate
+
+    @property
+    def format_enddate_url(self):
+        if self.enddate:
+            date=self.enddate
+            formatdate=date.strftime("%Y-%m-%d")
+            return formatdate
 
     @property
     def format_timemaxtension(self):

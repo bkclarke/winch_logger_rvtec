@@ -25,11 +25,111 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.platypus import Table, TableStyle, Paragraph
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 import io
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth import logout
-import random
+import json
 
 logger = logging.getLogger(__name__)
+
+def get_data_from_external_db(start_date, end_date, winch):
+    print("Fetching data from external DB...")  # Added context to the print statement
+
+    try:
+        conn = mysql.connector.connect(
+            host='127.0.0.1',
+            user='root',
+            password='b1uz00!!2SQ',
+            database='winch_data'
+        )
+
+        query = f"""
+            SELECT date_time, tension_load_cell, payout
+            FROM {winch}
+            WHERE date_time BETWEEN '{start_date}' AND '{end_date}'
+        """
+
+        cursor = conn.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        cursor.close()
+        conn.close()  # Close connection properly
+
+        if len(rows) > 1000:
+            print("Data rows fetched:", rows)
+            binned_data = {}
+            for row in rows:
+                dt = row[0]
+                if dt not in binned_data:
+                    binned_data[dt] = {'max_tension': row[1], 'max_payout': row[2]}
+                else:
+                    binned_data[dt]['max_tension'] = max(binned_data[dt]['max_tension'], row[1])
+                    binned_data[dt]['max_payout'] = max(binned_data[dt]['max_payout'], row[2])
+            return sorted(binned_data.items())
+        else:
+            print("Data rows fetched (less than 1000):", rows)
+            return [(row[0], {'max_tension': row[1], 'max_payout': row[2]}) for row in rows]
+    
+    except Exception as e:
+        print(f"Error fetching data: {e}")  # Print error for debugging
+        return []
+
+def charts(request):
+    # Default values for filtering
+    start_date = request.GET.get('start_date')
+    print(start_date)
+    end_date = request.GET.get('end_date')
+    print(end_date)
+    winch_id = request.GET.get('winch')
+    print(winch_id)
+
+    # Initialize empty data lists
+    data_tension = []
+    data_payout = []
+
+    # Validate and parse the dates and winch
+    if start_date and end_date and winch_id:
+        print('attempting to parse:', start_date, end_date, winch_id)
+        try:
+            # Convert the string dates to date objects
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date() + timedelta(days=1)
+            winch = Winch.objects.get(id=winch_id)  # Fetch the winch object
+        except (ValueError, Winch.DoesNotExist):
+            # Handle parsing errors or winch not found
+            start_date = end_date = None
+            winch = None
+    else:
+        # Set default values if parameters are missing
+        end_date = datetime.utcnow().date() + timedelta(days=1)
+        start_date = end_date - timedelta(days=1)
+        winch = Winch.objects.last()  # Default to the last winch if none provided
+
+    # Fetch data using the retrieved parameters
+    data_points = get_data_from_external_db(start_date, end_date, winch)
+
+    # Process the data points
+    if data_points:
+        for dt, values in data_points:
+            data_tension.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_tension']})
+            data_payout.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_payout']})
+
+    # Serialize the data to JSON
+    data_json_tension = json.dumps(data_tension)
+    data_json_payout = json.dumps(data_payout)
+
+    # Create an instance of the form with the initial values for rendering
+    form = DataFilterForm(initial={
+        'start_date': start_date,
+        'end_date': end_date - timedelta(days=1) if end_date else None,
+        'winch': winch,
+    })
+
+    return render(request, 'wwdb/reports/charts.html', {
+        'form': form,
+        'data_json_tension': data_json_tension,
+        'data_json_payout': data_json_payout
+    })
 
 def logout_view(request):
     logout(request)
@@ -236,14 +336,14 @@ def cruiseconfigurehome(request):
     deployments = DeploymentType.objects.all()
     active_wire = Wire.objects.filter(status=True)
     winches = Winch.objects.all()
-    cruise = Cruise.objects.all()
+    cruises = Cruise.objects.all()
 
     context = {
         'operators': operators,
         'deployments': deployments,
         'active_wire': active_wire,
         'winches': winches,
-        'cruise' : cruise,
+        'cruises' : cruises,
        }
 
     return render(request, 'wwdb/configuration/cruiseconfiguration.html', context=context)
@@ -303,7 +403,7 @@ def castreport(request):
     # Initialize form with data from GET request (if any)
     form = CastFilterForm(request.GET)
     casts = Cast.objects.all()
-    cast_complete = Cast.objects.filter(maxpayout__isnull=False, maxtension__isnull=False) 
+    cast_complete = Cast.objects.filter(flagforreview=False, maxpayout__isnull=False, maxtension__isnull=False) 
     cast_flag = Cast.objects.filter((Q(flagforreview=True) | Q(maxpayout__isnull=True) | Q(maxtension__isnull=True)))
 
     # Handle form submission and filtering
@@ -320,22 +420,119 @@ def castreport(request):
         if winch:
             casts = casts.filter(winch=winch)
         if startdate:    
-            casts = casts.filter(startdate__gte=date_min)
+            casts = casts.filter(startdate__gte=startdate)
         if enddate:
-            casts = casts.filter(enddate__gte=date_max)
+            casts = casts.filter(enddate__lte=enddate)
         if wire:
             casts = casts.filter(wire=wire)
         if operator:
             casts = casts.filter(Q(startoperator=operator) | Q(endoperator=operator))
 
-        context = {
-            'cast_complete': cast_complete,
-            'cast_flag': cast_flag,
-            'form': form,
-            'casts': casts,
-           }
+    context = {
+        'cast_complete': cast_complete,
+        'cast_flag': cast_flag,
+        'casts': casts,
+        'form': form,
+       }
     # Render the template with form and filtered products
     return render(request, 'wwdb/reports/castreport.html', context)
+
+"""
+def is_valid_queryparam(param):
+    return param != '' and param is not None
+
+
+def cast_table_filter(request):
+    
+    qs = Cast.objects.all()
+    wire = request.GET.get('wire_nsfid')
+    winch = request.GET.get('winch_id')
+    deployment = request.GET.get('deployment_id')
+    date_min = request.GET.get('date_min')
+    date_max = request.GET.get('date_max')
+
+    if is_valid_queryparam(date_min):
+        qs=qs.filter(startdate__gte=date_min)
+
+    if is_valid_queryparam(date_max):
+        qs=qs.filter(enddate__lt=date_max)
+
+    if is_valid_queryparam(wire):
+        if wire!='Wire':
+            wire_obj=Wire.objects.filter(nsfid=wire).last()
+            qs=qs.filter(wire=wire_obj)
+
+    if is_valid_queryparam(winch):
+        if winch!='Winch':
+            winch_obj=Winch.objects.filter(name=winch).last()
+            qs=qs.filter(winch=winch_obj)
+
+    if is_valid_queryparam(deployment):
+        if deployment!='Deployment':
+            deployment_obj=DeploymentType.objects.filter(name=deployment).last()
+            qs=qs.filter(deploymenttype=deployment_obj)
+
+    return qs
+
+def castreport(request):
+    wire=Wire.objects.all()
+    winch=Winch.objects.all()
+    deployment=DeploymentType.objects.all()
+    qs = cast_table_filter(request)
+
+
+
+    context = {
+        'qs':qs,
+        'wire':wire,
+        'winch':winch,
+        'deployment':deployment,
+        }
+
+    return render(request, "wwdb/reports/castreport.html", context)
+"""
+
+def cast_table_csv(request):
+    cast = cast_table_filter(request)
+
+    response = HttpResponse(content_type="text/plain")
+    response['Content-Disposition']='attachement; filename=cast_table.csv'
+    
+    lines = []
+
+    date_min=cast.order_by('startdate').first()
+    date_max=cast.order_by('enddate').last()
+
+    lines.append('\n#Start date:' + str(date_min))
+    lines.append('\n#End Date:' + str(date_max))
+    lines.append('\n#\n#')
+    lines.append('\n#\nstarttime, endtime, winch, wire, deploymenttype, startoperator, endoperator, maxtension, maxpayout, payoutmaxtension, metermaxtension, timemaxtension, wetendtag, dryendtag, notes')
+
+    for c in cast:
+            lines.append('\n' + str(c.startdate) + ',' 
+            +  str(c.enddate) + ',' 
+            +  str(c.active_winch) + ',' 
+            +  str(c.wire) + ','
+            +  str(c.deploymenttype) + ',' 
+            +  str(c.startoperator) + ',' 
+            +  str(c.endoperator) + ',' 
+            +  str(c.maxtension) + ',' 
+            +  str(c.maxpayout) + ',' 
+            +  str(c.payoutmaxtension) + ',' 
+            +  str(c.metermaxtension) + ',' 
+            +  str(c.timemaxtension) + ','
+            +  str(c.wetendtag) + ',' 
+            +  str(c.dryendtag) + ',' 
+            +  str(c.notes) + ',' )
+
+
+    response.writelines(lines)
+
+
+    return response
+
+
+
 
 def cruisereport(request, pk):
     
@@ -1243,6 +1440,11 @@ BREAKTESTS
 Classes related to create, update, view Breaktest model
 """
 
+class BreaktestDelete(DeleteView):
+    model = Breaktest
+    template_name="wwdb/maintenance/breaktestdelete.html"
+    success_url= reverse_lazy('breaktestlist')
+
 def breaktestlist(request):
     break_test = Breaktest.objects.order_by('-date')
 
@@ -1293,6 +1495,8 @@ def breaktestedit(request, id):
 
     context["form"] = form
     return render(request, "wwdb/maintenance/breaktestedit.html", context)
+
+
 """
 LUBRICATION
 Classes related to create, update, view Lubrication model
@@ -1422,6 +1626,11 @@ def cutbackreterminationadd(request):
     return render(request, 'wwdb/maintenance/cutbackreterminationadd.html', context)
 
 
+class CutbackreterminationDelete(DeleteView):
+    model = CutbackRetermination
+    template_name="wwdb/maintenance/cutbackreterminationdelete.html"
+    success_url= reverse_lazy('cutbackreterminationlist')
+
 """
 Cruises
 Classes related to create, update, view Cruise model
@@ -1478,22 +1687,19 @@ def cruisetableeditsubmit(request, cruise_pk):
     return render(request, 'wwdb/configuration/cruisetablerow.html', context)
 
 def cruiseedit(request, id):
-    context ={}
-    obj = get_object_or_404(Cruise, id = id)
+    obj = get_object_or_404(Cruise, id=id)
 
     if request.method == 'POST':
-        form = EditCruiseForm(request.POST, instance = obj)
+        form = EditCruiseForm(request.POST, instance=obj)
         if form.is_valid():
             form.save()
-            cruiseid=Cruise.objects.get(id=id)
-            return HttpResponseRedirect("/wwdb/configuration/cruiseconfiguration")
+            return redirect('/wwdb/configuration/cruiseconfiguration')  
     else:
-        form = EditCruiseForm(instance = obj)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/wwdb/configuration/cruise/%i/edit" % cruiseid.pk)
+        form = EditCruiseForm(instance=obj)
 
-    context["form"] = form
+    context = {
+        "form": form
+    }
     return render(request, "wwdb/configuration/cruiseedit.html", context)
 
 def cruiseadd(request):
@@ -1514,3 +1720,7 @@ def cruiseadd(request):
 
     return render(request, 'wwdb/configuration/cruiseadd.html', context)
 
+class CruiseDelete(DeleteView):
+    model = Cruise
+    template_name="wwdb/cruiseconfiguration/cruisedelete.html"
+    success_url= reverse_lazy('cruiseconfigurehome')

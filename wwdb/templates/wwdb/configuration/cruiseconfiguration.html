@@ -32,29 +32,45 @@
         <div class="tab-content">
             </br>
             <div class="tab-pane container fade show active" id="cruise">
-                <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-                    <h1>Cruises</h1>
-                    </br>
-                    <button type="button" class="btn btn-outline-wwdb"
-                            hx-get="{% url 'cruisetableadd' %}"
-                            hx-target="next tbody"
-                            hx-swap="afterbegin">
-                        Add cruise
-                    </button>
-                    <div id="query_result"
-                         hx-target="this"
-                         hx-swap="innerHTML"
-                         hx-get="{% url 'cruisetablelistget' %}"
-                         hx-trigger="load delay:0.5s">
-                    </div>
-                </div>
-                <div id="table-content" hx-get="{% url 'cruisetablelistget' %}"></div>
+                <h1>Cruises</h1>
+                <br />
+                </br>
+                <button id="cruiseadd" class="btn btn-secondary btn-sm">Add Cruise</button>
+                </br>
+                </br>
+                <table id="table" class="display nowrap" style="width:100%">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Cruise number</th>
+                            <th>Start date</th>
+                            <th>End date</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    {% for cruise in cruises %}
+                    <tr>
+                        <td>{{ cruise.number }}</td>
+                        <td>{{cruise.format_startdate}}</td>
+                        <td>{{cruise.format_enddate}}</td>
+                        <td>
+                            <a href="{% url 'cruiseedit' cruise.pk %}" class="btn btn-primary btn-sm">Edit</a>
+                        </td>
+                        <td>
+                            <form action="{% url 'cruisedelete' cruise.pk %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-danger btn-sm" value="Delete" onclick="return confirm('Are you sure you want to delete this cruise?');">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
             <div class="tab-pane container fade" id="operators">
                 <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                     <h1>Operators</h1>
                     </br>
-                    <button type="button" class="btn btn-outline-wwdb"
+                    <button type="button" class="btn btn-secondary btn-sm"
                             hx-get="{% url 'operatortableadd' %}"
                             hx-target="next tbody"
                             hx-swap="afterbegin">
@@ -72,7 +88,7 @@
                 <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                     <h1>Deployments</h1>
                     </br>
-                    <button type="button" class="btn btn-outline-wwdb"
+                    <button type="button" class="btn btn-secondary btn-sm"
                             hx-get="{% url 'deploymenttableadd' %}"
                             hx-target="next tbody"
                             hx-swap="afterbegin">
@@ -90,7 +106,7 @@
                 <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                     <h1>Winches</h1>
                     </br>
-                    <button type="button" class="btn btn-outline-wwdb"
+                    <button type="button" class="btn btn-secondary btn-sm"
                             hx-get="{% url 'winchtableadd' %}"
                             hx-target="next tbody"
                             hx-swap="afterbegin">
@@ -121,14 +137,25 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#cruise a').on('click', function (e) {
-            e.preventDefault();
-            $(this).tab('show');
+        // Allow the Edit button to function normally
+        $('.nav-tabs a').on('click', function (e) {
+            // Prevent the default action only if it's not an Edit link
+            if (!$(this).hasClass('edit-link')) {
+                e.preventDefault();
+                $(this).tab('show');
+            }
         });
 
         // Trigger the click on the active tab on page load
-        var activeTab = $('#cruise .nav-link.active');
+        var activeTab = $('.nav-tabs .nav-link.active');
         activeTab.tab('show');
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#cruiseadd').click(function () {
+            window.location.href = "{% url 'cruiseadd' %}";
+        });
     });
 </script>
 {% endblock %}

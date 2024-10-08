@@ -120,12 +120,14 @@ class EndCastForm(ModelForm):
   
         fields = [
             'endoperator',
+            'enddate',
             'notes',
             'wirerinse',
             'flagforreview',
         ]
 
         widgets = {
+            'enddate': DateTimePickerInput(),
             "notes": forms.TextInput(
                 attrs={
                     "class": "form-control",
@@ -263,7 +265,15 @@ class EditCruiseForm(ModelForm):
             'enddate',
         ]
  
-        widgets = {'startdate': DatePickerInput(
+        widgets = {
+                    "number": forms.TextInput(
+                    attrs={
+                    "class": "form-control",
+                    "style": "max-width: 100%; align: center;",
+                    "placeholder": "Cruise number",
+                        }
+                    ),
+                    'startdate': DatePickerInput(
                     options={
                     "format": "YYYY-MM-DD"}
                     ),
@@ -345,7 +355,15 @@ class CruiseAddForm(ModelForm):
             'enddate',
         ]
 
-        widgets = {'startdate': DatePickerInput(
+        widgets = {
+                    "number": forms.TextInput(
+                    attrs={
+                    "class": "form-control",
+                    "style": "max-width: 100%; align: center;",
+                    "placeholder": "Cruise number",
+                        }
+                    ),
+                    'startdate': DatePickerInput(
                     options={
                     "format": "YYYY-MM-DD"}
                     ),
@@ -793,8 +811,9 @@ class CastFilterForm(forms.Form):
     deploymenttype = forms.ModelChoiceField(queryset=DeploymentType.objects.all(), empty_label='All deployments', required=False)
     operator = forms.ModelChoiceField(queryset=WinchOperator.objects.all(), empty_label='All operators', required=False)
     wire = forms.ModelChoiceField(queryset=Wire.objects.all(), empty_label='All wires', required=False)
-    startdate = forms.DateTimeField(required=False, widget=forms.DateTimeInput())
-    enddate = forms.DateTimeField(required=False, widget=forms.DateTimeInput())
+    startdate = forms.DateTimeField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    enddate = forms.DateTimeField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+
 
 class WireLocationForm(ModelForm):
 
@@ -838,3 +857,14 @@ class LocationForm(ModelForm):
                     "placeholder": "location",
                 }),
         }
+
+class DataFilterForm(forms.Form):
+    start_date = forms.DateTimeField(
+        input_formats=['%Y-%m-%d %H:%M:%S'],  # Adjust as necessary
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
+    )
+    end_date = forms.DateTimeField(
+        input_formats=['%Y-%m-%d %H:%M:%S'],  # Adjust as necessary
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
+    )
+    winch = forms.ModelChoiceField(queryset=Winch.objects.all())
