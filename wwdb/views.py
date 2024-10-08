@@ -810,7 +810,7 @@ def safeworkingtensions_file(request):
     
     #Define table settings and styles, add lines list to table
 
-    row_heights_length=len[active_wire]
+    row_heights_length=len(active_wire)
     row_heights=[100]*row_heights_length
 
     table = Table(lines,
