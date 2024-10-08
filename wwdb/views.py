@@ -809,9 +809,13 @@ def safeworkingtensions_file(request):
                       wire.safe_working_tension))
     
     #Define table settings and styles, add lines list to table
+
+    row_heights_length=len[active_wire]
+    row_heights=[100]*row_heights_length
+
     table = Table(lines,
                   colWidths=[150,175,80,120,120],
-                  rowHeights=[100,100,100,100])
+                  rowHeights=row_heights)
 
     table.setStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                     ("ALIGN", (0, 0), (-1, -1), "LEFT"),
