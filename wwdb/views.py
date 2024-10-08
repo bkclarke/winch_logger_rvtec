@@ -809,8 +809,9 @@ def safeworkingtensions_file(request):
                       wire.safe_working_tension))
     
     #Define table settings and styles, add lines list to table
-
-    row_heights_length=len(active_wire)
+    print(active_wire)
+    row_heights_length=len(active_wire)+1
+    print(row_heights_length)
     row_heights=[100]*row_heights_length
 
     table = Table(lines,
