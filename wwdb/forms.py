@@ -18,6 +18,7 @@ class StartCastForm(ModelForm):
         fields = [
             'startoperator',
             'startdate',
+            'enddate',
             'deploymenttype',
             'winch',
             'notes',
