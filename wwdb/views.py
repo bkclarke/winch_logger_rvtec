@@ -812,7 +812,7 @@ def safeworkingtensions_file(request):
     print(active_wire)
     row_heights_length=len(active_wire)+1
     print(row_heights_length)
-    row_heights=[100]*row_heights_length
+    row_heights=[80]*row_heights_length
 
     table = Table(lines,
                   colWidths=[150,175,80,120,120],
