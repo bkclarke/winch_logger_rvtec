@@ -8,10 +8,13 @@ from datetime import datetime
 
 class StartCastForm(ModelForm):
     flagforreview = forms.BooleanField(required=False)
-    deploymenttype = forms.ModelChoiceField(DeploymentType.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}))
+    deploymenttype = forms.ModelChoiceField(
+        queryset=DeploymentType.objects.filter(id__in=[24, 26, 30, 33]),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )    
     winch = forms.ModelChoiceField(Winch.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}), required=False)
     startoperator = forms.ModelChoiceField(WinchOperator.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}))
-
+]
 
     class Meta:
         model = Cast
