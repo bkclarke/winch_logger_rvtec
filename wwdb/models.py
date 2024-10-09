@@ -52,7 +52,7 @@ def random_cast_picker(deployment):
 
     if deployment == 'CTD':
         dates = date_picker(CTD_list)
-    elif deployment == 'Calibrations/ pull test':
+    elif deployment == 'Calibration/ pull test':
         dates = date_picker(pull_test_list)
     elif deployment == 'Gravity core':
         dates = date_picker(gravity_core_list)
