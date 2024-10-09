@@ -88,6 +88,7 @@
                 <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                     <h1>Deployments</h1>
                     </br>
+                    <p>**status does not impact form in demo version</p>
                     <button type="button" class="btn btn-secondary btn-sm"
                             hx-get="{% url 'deploymenttableadd' %}"
                             hx-target="next tbody"
