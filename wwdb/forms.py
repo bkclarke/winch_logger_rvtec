@@ -878,4 +878,4 @@ class DataFilterForm(forms.Form):
         input_formats=['%Y-%m-%d %H:%M:%S'],  # Adjust as necessary
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
     )
-    winch = forms.ModelChoiceField(queryset=Winch.objects.all())
+    winch = forms.ModelChoiceField(queryset=Winch.objects.filter(id__in=[6, 7]))
