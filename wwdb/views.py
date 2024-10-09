@@ -156,9 +156,10 @@ def caststart(request):
             form.save()
             cast=Cast.objects.last()
             cast.refresh_from_db()
+            cast.startcast_get_datetime()
+            cast.save()
+            cast.refresh_from_db()
             cast.get_active_wire()
-            if cast.startdate == None:
-                cast.startcast_get_datetime()
             cast.save()
             return HttpResponseRedirect("%i/castend" % cast.pk)
     else:

@@ -9,7 +9,7 @@ from datetime import datetime
 class StartCastForm(ModelForm):
     flagforreview = forms.BooleanField(required=False)
     deploymenttype = forms.ModelChoiceField(DeploymentType.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}))
-    winch = forms.ModelChoiceField(Winch.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}))
+    winch = forms.ModelChoiceField(Winch.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}), required=False)
     startoperator = forms.ModelChoiceField(WinchOperator.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}))
 
 
@@ -34,6 +34,14 @@ class StartCastForm(ModelForm):
                     "placeholder": "Notes",
                 }),
             }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Set the default value for the winch field
+        default_winch = Winch.objects.filter(status=True).first()  # Get the first active winch
+        if default_winch:
+            self.fields['winch'].initial = default_winch
 
 
     def __init__(self, *args, **kwargs):

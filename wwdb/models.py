@@ -29,16 +29,35 @@ def random_cast_picker(deployment):
         ['2024-08-11 23:40:00','2024-08-12 00:00:00'],
     ]
 
+    pull_test_list=[
+        ['2024-09-16 06:11:00','2024-09-16 08:24:00'],
+    ]
+
+    multicore_list=[
+        ['2024-07-20 08:50:00','2024-07-20 11:00:00'],
+    ]
+
+    gravity_core_list=[
+        ['2024-07-20 11:25:00','2024-07-20 13:25:00'],
+        ['2024-07-20 16:35:00','2024-07-20 18:45:00'],
+        ['2024-07-20 20:25:00','2024-07-20 22:45:00'],
+        ['2024-07-16 23:50:00','2024-07-17 01:10:00'],
+        ['2024-07-17 01:55:00','2024-07-17 03:15:00'],
+        ['2024-07-17 04:10:00','2024-07-17 05:25:00'],
+    ]
+
     def date_picker(deployment_list):
         return random.choice(deployment_list)
 
 
     if deployment == 'CTD':
         dates = date_picker(CTD_list)
-    elif deployment == 'Bongos':
-        dates = date_picker(bongos_list)
-    elif deployment == 'Towsled':
-        dates = date_picker(towsled_list)
+    elif deployment == 'Calibrations/ pull test':
+        dates = date_picker(pull_test_list)
+    elif deployment == 'Gravity core':
+        dates = date_picker(gravity_core_list)
+    elif deployment == 'Multicore':
+        dates = date_picker(multicore_list)
     else:
         print("Invalid deployment type")
         return None
@@ -297,6 +316,7 @@ class Cast(models.Model):
 
     def startcast_get_datetime(self):
             deployment=self.deploymenttype.name
+            winch=self.winch
             dates = random_cast_picker(deployment)
             print(dates)
             if dates:
@@ -306,6 +326,20 @@ class Cast(models.Model):
                 print(self.enddate)
             else:
                 print("No dates found.")
+            if deployment=='CTD':
+                winch_instance=Winch.objects.filter(name='winch_2').last()
+                self.winch=winch_instance
+            if deployment=='Calibration/ pull test':
+                winch_instance=Winch.objects.filter(name='winch_7').last()
+                self.winch=winch_instance
+            if deployment=='Gravity core':
+                winch_instance=Winch.objects.filter(name='winch_7').last()
+                self.winch=winch_instance
+            if deployment=='Multicore':
+                winch_instance=Winch.objects.filter(name='winch_7').last()
+                self.winch=winch_instance
+            print(deployment)
+            print(winch)
 
     def get_cast_duration(self):
         if self.enddate and self.startdate:
