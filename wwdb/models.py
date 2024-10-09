@@ -30,7 +30,7 @@ def random_cast_picker(deployment):
     ]
 
     pull_test_list=[
-        ['2024-09-16 06:11:00','2024-09-16 08:24:00'],
+        ['2024-10-01 22:45:00','2024-10-01 23:18:00'],
     ]
 
     multicore_list=[
