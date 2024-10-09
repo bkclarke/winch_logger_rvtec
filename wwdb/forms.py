@@ -14,7 +14,7 @@ class StartCastForm(ModelForm):
     )    
     winch = forms.ModelChoiceField(Winch.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}), required=False)
     startoperator = forms.ModelChoiceField(WinchOperator.objects.filter(status=True), widget=forms.Select(attrs={'class': 'form-control'}))
-]
+
 
     class Meta:
         model = Cast
