@@ -2,31 +2,36 @@
 {% extends "wwdb/base.html" %}
 {% load static %}
 
-
 {% block content %}
 
 <h1>Winch Plots</h1>
-</br>
-<form method="get">
-    <div>
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="start_date" value="{{ form.start_date.value|date:'Y-m-d'|default_if_none:'' }}" required>
+<br>
+<p><strong>Date range restricted to 1 week in demo version</strong></p>
+<br>
+<form method="get" onsubmit="return validateDateRange();" class="form-inline">
+    <div class="form-group mb-2">
+        <label for="start_date" class="mr-2">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ form.start_date.value|date:'Y-m-d'|default_if_none:'' }}" required>
     </div>
 
-    <div>
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="end_date" value="{{ form.end_date.value|date:'Y-m-d'|default_if_none:'' }}" required>
+    <div class="form-group mb-2 ml-3">
+        <label for="end_date" class="mr-2">End Date:</label>
+        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ form.end_date.value|date:'Y-m-d'|default_if_none:'' }}" required>
     </div>
-    {{ form.winch }}
-    <button type="submit">Filter Data</button>
+
+    <div class="form-group mb-2 ml-3">
+        {{ form.winch }}
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-2 ml-3">Filter Data</button>
 </form>
 <div id="container" style="width: 100%; height: 400px;"></div>
-</br>
-</br>
+<br>
+<br>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        var startDateInput = document.getElementById('id_start_date');
-        var endDateInput = document.getElementById('id_end_date');
+        var startDateInput = document.getElementById('start_date');
+        var endDateInput = document.getElementById('end_date');
 
         var currentDate = new Date();
         var currentDateString = currentDate.toISOString().split('T')[0];
@@ -128,16 +133,15 @@
                                 style: {
                                     color: 'red'
                                 },
-                                align: 'left', // Horizontally aligned to the left of the line
-                                verticalAlign: 'bottom', // Vertically aligned in the middle
-                                x: 10, // Horizontal offset from the line
-                                y: -20, // Vertical offset from the line
-                                rotation: 0 // Horizontal text
+                                align: 'left',
+                                verticalAlign: 'bottom',
+                                x: 10,
+                                y: -20,
+                                rotation: 0
                             }
                         }]
                     });
                 } else {
-                    // If no data is visible, remove the plot line
                     xAxis.update({
                         plotLines: []
                     });
@@ -147,5 +151,17 @@
             console.error('Error parsing or plotting data:', e);
         }
     });
+
+    function validateDateRange() {
+        var startDate = new Date(document.getElementById('start_date').value);
+        var endDate = new Date(document.getElementById('end_date').value);
+        var oneWeekInMillis = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+
+        if (endDate - startDate > oneWeekInMillis) {
+            alert("Date range cannot exceed one week.");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
 </script>
 {% endblock content %}
