@@ -43,8 +43,10 @@ def get_data_from_external_db(start_date, end_date, winch):
         )
 
         start_date_str = start_date.strftime('%Y-%m-%d %H:%M')
+        print(start_date_str)
         end_date_str = end_date.strftime('%Y-%m-%d %H:%M')
-
+        print(end_date_str)
+        print(winch)
         query = f"""
             SELECT date_time, tension_load_cell, payout
             FROM {winch}
