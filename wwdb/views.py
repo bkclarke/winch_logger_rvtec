@@ -99,7 +99,7 @@ def charts(request):
 
     # Validate and parse the dates and winch
     if start_date and end_date and winch_id:
-        print('attempting to parse:', start_date_str, end_date_str, winch_id)
+        print('attempting to parse:', start_date, end_date, winch_id)
         try:
             # Convert the string dates to datetime objects
             start_date = datetime.strptime(start_date_str, '%Y-%m-%d %H:%M:%S')
