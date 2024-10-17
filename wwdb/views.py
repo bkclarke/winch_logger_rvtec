@@ -92,8 +92,8 @@ def charts(request):
         print('attempting to parse:', start_date, end_date, winch_id)
         try:
             # Convert the string dates to date objects
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-            end_date = datetime.strptime(end_date, '%Y-%m-%d').date() + timedelta(days=1)
+            start_date = datetime.strptime(start_date, '%Y-%m-%dT%H:%M')
+            end_date = datetime.strptime(end_date, '%Y-%m-%dT%H:%M')
             winch = Winch.objects.get(id=winch_id)  # Fetch the winch object
         except (ValueError, Winch.DoesNotExist):
             # Handle parsing errors or winch not found
@@ -120,8 +120,8 @@ def charts(request):
 
     # Create an instance of the form with the initial values for rendering
     form = DataFilterForm(initial={
-        'start_date': start_date,
-        'end_date': end_date - timedelta(days=1) if end_date else None,
+        'start_date': start_date.strftime('%Y-%m-%dT%H:%M') if start_date else None,
+        'end_date': end_date.strftime('%Y-%m-%dT%H:%M') if end_date else None,
         'winch': winch,
     })
 
