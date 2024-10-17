@@ -42,6 +42,9 @@ def get_data_from_external_db(start_date, end_date, winch):
             database='winch_data'
         )
 
+        start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
+        end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
+
         query = f"""
             SELECT date_time, tension_load_cell, payout
             FROM {winch}
@@ -79,6 +82,8 @@ def charts(request):
     start_date_str = request.GET.get('start_date')
     end_date_str = request.GET.get('end_date')
     winch_id = request.GET.get('winch')
+    print(start_date_str)
+    print(end_date_str)
 
     # Initialize empty data lists
     data_tension = []
