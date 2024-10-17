@@ -33,13 +33,7 @@
         <td>{{wirelocation.enteredby}}</td>
         <td>{{wirelocation.notes}}</td>
         <td>
-            <button  class="btn btn-danger btn-sm"
-                    hx-confirm='Are you sure?'
-                    hx-target="closest tr"
-                    hx-swap="outerHTML swap:1s"
-                    hx-delete="{% url 'wirelocationdelete' wirelocation.pk %}">
-                Delete
-            </button>
+            <button class="btn btn-danger btn-sm" onclick="showDeleteAlert(event, '{{ wire.pk }}')">Delete</button>
         </td>
     </tr>
     {% endfor %}
@@ -57,8 +51,13 @@
         // Initialize tooltips (assuming you're using Bootstrap tooltips)
         $('[data-toggle="tooltip"]').tooltip();
     });
-</script>
-<script>
+
+    // Function to show alert for delete button
+    function showDeleteAlert(event) {
+        event.preventDefault(); // Prevent the default action (if needed)
+        alert("The delete function has been disabled in the demo version. In production version user permissions determine who can delete database entries.");
+    }
+
     $(document).ready(function () {
         $('#wirelocationadd').click(function () {
             window.location.href = "{% url 'wirelocationadd' %}";
