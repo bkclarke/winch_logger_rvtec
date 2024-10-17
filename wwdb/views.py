@@ -44,11 +44,12 @@ def get_data_from_external_db(start_date, end_date, winch):
 
         winch=Winch.objects.get(id=winch)
 
-        start_date_plus_10min = start_date - timedelta(minutes=10)
-        end_date_minus_10min = end_date + timedelta(minutes=10)
-
-        start_date_str = start_date_plus_10min.strftime('%Y-%m-%d %H:%M:%S')
-        end_date_str = end_date_minus_10min.strftime('%Y-%m-%d %H:%M:%S')
+        start_date_minus_10min = start_date - timedelta(minutes=10)
+        print(start_date_minus_10min)
+        end_date_plus_10min = end_date + timedelta(minutes=10)
+        print(start_date_plus_10min)
+        start_date_str = start_date_minus_10min.strftime('%Y-%m-%d %H:%M:%S')
+        end_date_str = end_date_plus_10min.strftime('%Y-%m-%d %H:%M:%S')
 
 
         query = f"""
@@ -56,6 +57,7 @@ def get_data_from_external_db(start_date, end_date, winch):
             FROM {winch}
             WHERE date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
         """
+        print(query)
 
         cursor = conn.cursor()
         cursor.execute(query)
@@ -85,11 +87,11 @@ def get_data_from_external_db(start_date, end_date, winch):
 
 def charts(request):
     # Default values for filtering
-    start_date_str = request.GET.get('start_date')
-    end_date_str = request.GET.get('end_date')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
     winch_id = request.GET.get('winch')
-    print(start_date_str)
-    print(end_date_str)
+
+    print(start_date, end_date, winch_id)
 
     # Initialize empty data lists
     data_tension = []
@@ -112,6 +114,7 @@ def charts(request):
         end_date = datetime.utcnow() + timedelta(days=1)
         start_date = end_date - timedelta(days=1)
         winch = Winch.objects.last()  # Default to the last winch if none provided
+        print('default vals' + end_date, start_date)
 
     # Fetch data using the retrieved parameters
     if winch:  # Only fetch data if winch is valid
