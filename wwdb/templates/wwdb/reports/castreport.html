@@ -119,7 +119,9 @@
     {% for cast in casts %}
     <tr>
         <td>
-            <a href="{% url 'charts' %}?start_date={{ cast.format_startdate_csv }}&end_date={{ cast.format_enddate_csv }}&winch={{ cast.winch.id }}" class="btn btn-info btn-sm">View Plot</a>
+            <a href="{% url 'charts' %}?start_date={{ cast.start_date|date:'Y-m-dT%H:%M' }}&end_date={{ cast.end_date|date:'Y-m-dT%H:%M' }}&winch={{ cast.winch.id }}" class="btn btn-primary">
+                View Chart
+            </a>
         </td>
         <td>{{cast.format_startdate_csv}}</td>
         <td>{{cast.duration}}</td>
