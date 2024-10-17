@@ -44,8 +44,8 @@ def get_data_from_external_db(start_date, end_date, winch):
 
         winch=Winch.objects.get(id=winch)
 
-        start_date_plus_10min = start_date + timedelta(minutes=10)
-        end_date_minus_10min = end_date - timedelta(minutes=10)
+        start_date_plus_10min = start_date - timedelta(minutes=10)
+        end_date_minus_10min = end_date + timedelta(minutes=10)
 
         start_date_str = start_date_plus_10min.strftime('%Y-%m-%d %H:%M:%S')
         end_date_str = end_date_minus_10min.strftime('%Y-%m-%d %H:%M:%S')
