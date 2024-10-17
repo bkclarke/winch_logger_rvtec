@@ -48,7 +48,7 @@ def get_data_from_external_db(start_date, end_date, winch):
         query = f"""
             SELECT date_time, tension_load_cell, payout
             FROM {winch}
-            WHERE date_time BETWEEN '{start_date}' AND '{end_date}'
+            WHERE date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
         """
 
         cursor = conn.cursor()
