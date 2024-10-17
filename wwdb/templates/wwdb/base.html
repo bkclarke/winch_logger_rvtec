@@ -1,6 +1,4 @@
-﻿<!--template/base.html-->
-<!DOCTYPE html>
-
+﻿<!DOCTYPE html>
 <html>
 <head>
     {% load static %}
@@ -40,55 +38,58 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a href="{% url 'home' %}">
-                <img src='/static/img/wire_logo.png' alt="Logo" class="logo" />
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{% url 'home' %}">
+                    <img src='/static/img/wire_logo.png' alt="Logo" class="logo" />
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'cruiseconfigurehome' %}">Configuration</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'castreport' %}">Casts</a>
-                            <a class="dropdown-item" href="{% url 'cruiselist' %}">Cruises</a>
-                            <a class="dropdown-item" href="{% url 'safeworkingtensions' %}">Safe working tensions</a>
-                            <a class="dropdown-item" href="{% url 'charts' %}">Winch plots</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Maintenance</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'cutbackreterminationlist' %}">Cutbacks/reterminations</a>
-                            <a class="dropdown-item" href="{% url 'breaktestlist' %}">Breaktests</a>
-                            <a class="dropdown-item" href="{% url 'lubricationlist' %}">Lubrications</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inventories</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'wirelist' %}">Tension members</a>
-                            <a class="dropdown-item" href="{% url 'wireropedatalist' %}">Wire data</a>
-                        </div>
-                    </li>
-                </ul>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'cruiseconfigurehome' %}">Configuration</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'castreport' %}">Casts</a>
+                                <a class="dropdown-item" href="{% url 'cruiselist' %}">Cruises</a>
+                                <a class="dropdown-item" href="{% url 'safeworkingtensions' %}">Safe working tensions</a>
+                                <a class="dropdown-item" href="{% url 'charts' %}">Winch plots</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Maintenance</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'cutbackreterminationlist' %}">Cutbacks/reterminations</a>
+                                <a class="dropdown-item" href="{% url 'breaktestlist' %}">Breaktests</a>
+                                <a class="dropdown-item" href="{% url 'lubricationlist' %}">Lubrications</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inventories</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'wirelist' %}">Tension members</a>
+                                <a class="dropdown-item" href="{% url 'wireropedatalist' %}">Wire data</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="d-flex justify-content-center flex-grow-1">
+
+            <div class="d-flex">
                 {% if template_name != 'caststart.html' and template_name != 'castend.html' %}
                 {% if last.enddate %}
-                <button type="button" class="btn btn btn-danger btn-lg mx-auto" style="padding: 5px 10px;">
+                <button type="button" class="btn btn-danger btn-lg mx-auto" style="padding: 5px 10px;">
                     <a class="button-link" href="{% url 'caststart' %}" style="color: inherit; text-decoration: none;">
                         Start Cast
                     </a>
                 </button>
                 {% else %}
-                <button type="button" class="btn btn btn-danger btn-lg mx-auto" style="padding: 5px 10px;">
+                <button type="button" class="btn btn-danger btn-lg mx-auto" style="padding: 5px 10px;">
                     <a class="button-link" href="{% url 'cast_end' %}" style="color: inherit; text-decoration: none;">
                         Cast in progress - click here to End Cast
                     </a>
@@ -98,16 +99,19 @@
             </div>
         </div>
     </nav>
+
     <nav class="navbar fixed-bottom navbar-expand-sm navbar-light">
     </nav>
+
     <div class="container mt-5 mb-5">
         {% block content %}
         {% endblock content %}
-        </br>
-        </br>
+        <br>
+        <br>
     </div>
 </body>
 </html>
+
 <script>
     $(document).ready(function () {
         $('#startcast').click(function () {
@@ -122,5 +126,3 @@
         });
     });
 </script>
-
-

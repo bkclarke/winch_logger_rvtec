@@ -15,7 +15,7 @@
     </td>
     <td>
         <button class='btn btn-danger btn-sm'
-                hx-confirm='Are you sure?'
+                hx-confirm='Are you sure? Operators that have logged casts can not be deleted'
                 hx-target="closest tr"
                 hx-swap="outerHTML swap:1s"
                 hx-delete="{% url 'operatortabledelete' winchoperator.pk %}">
