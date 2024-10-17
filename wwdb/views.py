@@ -76,24 +76,21 @@ def get_data_from_external_db(start_date, end_date, winch):
 
 def charts(request):
     # Default values for filtering
-    start_date = request.GET.get('start_date')
-    print(start_date)
-    end_date = request.GET.get('end_date')
-    print(end_date)
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
     winch_id = request.GET.get('winch')
-    print(winch_id)
 
     # Initialize empty data lists
     data_tension = []
     data_payout = []
 
     # Validate and parse the dates and winch
-    if start_date and end_date and winch_id:
-        print('attempting to parse:', start_date, end_date, winch_id)
+    if start_date_str and end_date_str and winch_id:
+        print('attempting to parse:', start_date_str, end_date_str, winch_id)
         try:
-            # Convert the string dates to date objects
-            start_date = datetime.strptime(start_date, '%Y-%m-%dT%H:%M')
-            end_date = datetime.strptime(end_date, '%Y-%m-%dT%H:%M')
+            # Convert the string dates to datetime objects
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M')
             winch = Winch.objects.get(id=winch_id)  # Fetch the winch object
         except (ValueError, Winch.DoesNotExist):
             # Handle parsing errors or winch not found
@@ -101,18 +98,19 @@ def charts(request):
             winch = None
     else:
         # Set default values if parameters are missing
-        end_date = datetime.utcnow().date() + timedelta(days=1)
+        end_date = datetime.utcnow() + timedelta(days=1)
         start_date = end_date - timedelta(days=1)
         winch = Winch.objects.last()  # Default to the last winch if none provided
 
     # Fetch data using the retrieved parameters
-    data_points = get_data_from_external_db(start_date, end_date, winch)
+    if winch:  # Only fetch data if winch is valid
+        data_points = get_data_from_external_db(start_date, end_date, winch.id)
 
-    # Process the data points
-    if data_points:
-        for dt, values in data_points:
-            data_tension.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_tension']})
-            data_payout.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_payout']})
+        # Process the data points
+        if data_points:
+            for dt, values in data_points:
+                data_tension.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_tension']})
+                data_payout.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_payout']})
 
     # Serialize the data to JSON
     data_json_tension = json.dumps(data_tension)
