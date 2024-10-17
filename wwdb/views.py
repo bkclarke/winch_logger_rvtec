@@ -87,8 +87,8 @@ def get_data_from_external_db(start_date, end_date, winch):
 
 def charts(request):
     # Default values for filtering
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
     winch_id = request.GET.get('winch')
 
     print(start_date, end_date, winch_id)
@@ -98,8 +98,8 @@ def charts(request):
     data_payout = []
 
     # Validate and parse the dates and winch
-    if start_date and end_date and winch_id:
-        print('attempting to parse:', start_date, end_date, winch_id)
+    if start_date_str and end_date_str and winch_id:
+        print('attempting to parse:', start_date_str, end_date_str, winch_id)
         try:
             # Convert the string dates to datetime objects
             start_date = datetime.strptime(start_date_str, '%Y-%m-%d %H:%M:%S')
