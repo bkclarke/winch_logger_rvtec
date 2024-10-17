@@ -114,7 +114,7 @@ def charts(request):
         end_date = datetime.utcnow() + timedelta(days=1)
         start_date = end_date - timedelta(days=1)
         winch = Winch.objects.last()  # Default to the last winch if none provided
-        print('default vals' + end_date, start_date)
+        print('default vals', end_date, start_date)
 
     # Fetch data using the retrieved parameters
     if winch:  # Only fetch data if winch is valid
