@@ -114,8 +114,8 @@ def charts(request):
         # Process the data points
         if data_points:
             for dt, values in data_points:
-                data_tension.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_tension']})
-                data_payout.append({'date': dt.strftime('%Y-%m-%d %H:%M:%S'), 'value': values['max_payout']})
+                data_tension.append({'date': dt.strftime('%Y-%m-%d %H:%M'), 'value': values['max_tension']})
+                data_payout.append({'date': dt.strftime('%Y-%m-%d %H:%M'), 'value': values['max_payout']})
 
     # Serialize the data to JSON
     data_json_tension = json.dumps(data_tension)
@@ -123,8 +123,8 @@ def charts(request):
 
     # Create an instance of the form with the initial values for rendering
     form = DataFilterForm(initial={
-        'start_date': start_date.strftime('%Y-%m-%d %H:%M:%S') if start_date else None,
-        'end_date': end_date.strftime('%Y-%m-%d %H:%M:%S') if end_date else None,
+        'start_date': start_date.strftime('%Y-%m-%d %H:%M') if start_date else None,
+        'end_date': end_date.strftime('%Y-%m-%d %H:%M') if end_date else None,
         'winch': winch,
     })
 
