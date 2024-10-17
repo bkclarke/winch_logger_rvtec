@@ -55,7 +55,7 @@
         }
 
         .btn-container {
-            margin-left: auto; /* Pushes the button to the left side */
+            margin-right: auto; /* Pushes the button to the left side */
         }
 
         /* Position dropdown below navbar on small screens */
@@ -76,9 +76,6 @@
             <a href="{% url 'home' %}">
                 <img src='/static/img/wire_logo.png' alt="Logo" class="logo" />
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="btn-container">
                 {% if template_name != 'caststart.html' and template_name != 'castend.html' %}
                 {% if last.enddate %}
@@ -96,6 +93,9 @@
                 {% endif %}
                 {% endif %}
             </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
@@ -141,21 +141,6 @@
     </div>
 </body>
 </html>
-
-<script>
-    $(document).ready(function () {
-        $('#startcast').click(function () {
-            window.location.href = "{% url 'caststart' %}";
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#endcast').click(function () {
-            window.location.href = "{% url 'caststart' %}";
-        });
-    });
-</script>
 
 <script>
     $(document).ready(function () {
