@@ -221,8 +221,8 @@ class Cast(models.Model):
 
     @property
     def format_enddate_csv(self):
-        if self.startdate:
-            date=self.startdate
+        if self.enddate:
+            date=self.enddate
             formatdate=date.strftime("%Y-%m-%d %H:%M")
             return formatdate
 
