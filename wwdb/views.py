@@ -42,8 +42,8 @@ def get_data_from_external_db(start_date, end_date, winch):
             database='winch_data'
         )
 
-        start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
-        end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
+        start_date_str = start_date.strftime('%Y-%m-%d %H:%M')
+        end_date_str = end_date.strftime('%Y-%m-%d %H:%M')
 
         query = f"""
             SELECT date_time, tension_load_cell, payout
@@ -94,8 +94,8 @@ def charts(request):
         print('attempting to parse:', start_date_str, end_date_str, winch_id)
         try:
             # Convert the string dates to datetime objects
-            start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M')
-            end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M')
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d %H:%M')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d %H:%M')
             winch = Winch.objects.get(id=winch_id)  # Fetch the winch object
         except (ValueError, Winch.DoesNotExist):
             # Handle parsing errors or winch not found
@@ -123,8 +123,8 @@ def charts(request):
 
     # Create an instance of the form with the initial values for rendering
     form = DataFilterForm(initial={
-        'start_date': start_date.strftime('%Y-%m-%dT%H:%M') if start_date else None,
-        'end_date': end_date.strftime('%Y-%m-%dT%H:%M') if end_date else None,
+        'start_date': start_date.strftime('%Y-%m-%d %H:%M:%S') if start_date else None,
+        'end_date': end_date.strftime('%Y-%m-%d %H:%M:%S') if end_date else None,
         'winch': winch,
     })
 
