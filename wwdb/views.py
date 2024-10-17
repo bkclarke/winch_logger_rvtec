@@ -91,7 +91,7 @@ def charts(request):
     end_date_str = request.GET.get('end_date')
     winch_id = request.GET.get('winch')
 
-    print(start_date, end_date, winch_id)
+    print(start_date_str, end_date_str, winch_id)
 
     # Initialize empty data lists
     data_tension = []
