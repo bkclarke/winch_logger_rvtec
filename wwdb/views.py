@@ -31,6 +31,24 @@ import json
 
 logger = logging.getLogger(__name__)
 
+def parse_date(date_str):
+    """Parse a date string in either '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S', or '%Y-%m-%dT%H:%M' format.
+       If seconds are missing, append ':00'."""
+    formats = ['%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M', '%Y-%m-%d %H:%M']
+    for fmt in formats:
+        try:
+            # Attempt to parse the date string
+            dt = datetime.strptime(date_str, fmt)
+            # If seconds are not included, set them to 0
+            if fmt in ['%Y-%m-%d %H:%M', '%Y-%m-%dT%H:%M']:
+                dt = dt.replace(second=0)
+            return dt
+        except ValueError:
+            continue
+    
+    # If all formats fail, raise an error
+    raise ValueError(f"Date string '{date_str}' does not match expected formats.")
+
 def get_data_from_external_db(start_date, end_date, winch):
     print("Fetching data from external DB...")  # Added context to the print statement
 
@@ -101,14 +119,18 @@ def charts(request):
     if start_date_str and end_date_str and winch_id:
         print('attempting to parse:', start_date_str, end_date_str, winch_id)
         try:
-            # Convert the string dates to datetime objects
-            start_date = datetime.strptime(start_date_str, '%Y-%m-%d %H:%M:%S')
-            end_date = datetime.strptime(end_date_str, '%Y-%m-%d %H:%M:%S')
+            # Use the utility function to parse dates
+            start_date = parse_date(start_date_str)
+            print(start_date)
+            end_date = parse_date(end_date_str)
+            print(end_date)
             winch = Winch.objects.get(id=winch_id)  # Fetch the winch object
-        except (ValueError, Winch.DoesNotExist):
+        except (ValueError, Winch.DoesNotExist) as e:
             # Handle parsing errors or winch not found
+            print(f"Error: {e}")
             start_date = end_date = None
             winch = None
+
     else:
         # Set default values if parameters are missing
         end_date = datetime.utcnow() + timedelta(days=1)
@@ -132,15 +154,17 @@ def charts(request):
 
     # Create an instance of the form with the initial values for rendering
     form = DataFilterForm(initial={
-        'start_date': start_date.strftime('%Y-%m-%d %H:%M:%S') if start_date else None,
-        'end_date': end_date.strftime('%Y-%m-%d %H:%M:%S') if end_date else None,
-        'winch': winch,
+        'start_date': start_date.strftime('%Y-%m-%dT%H:%M') if start_date else None,
+        'end_date': end_date.strftime('%Y-%m-%dT%H:%M') if end_date else None,
+        'winch': winch.id if winch else None,
     })
+
+    print("Form initial values:", form.initial)  # Debugging statement
 
     return render(request, 'wwdb/reports/charts.html', {
         'form': form,
         'data_json_tension': data_json_tension,
-        'data_json_payout': data_json_payout
+        'data_json_payout': data_json_payout,
     })
 
 def logout_view(request):

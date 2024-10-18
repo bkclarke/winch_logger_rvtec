@@ -871,11 +871,11 @@ class LocationForm(ModelForm):
 
 class DataFilterForm(forms.Form):
     start_date = forms.DateTimeField(
-        input_formats=['%Y-%m-%d %H:%M:%S'],  # Adjust as necessary
+        input_formats=['%Y-%m-%dT%H:%M'],  # Adjust as necessary
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
     )
     end_date = forms.DateTimeField(
-        input_formats=['%Y-%m-%d %H:%M:%S'],  # Adjust as necessary
+        input_formats=['%Y-%m-%dT%H:%M'],  # Adjust as necessary
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
     )
     winch = forms.ModelChoiceField(queryset=Winch.objects.filter(id__in=[6, 7]))

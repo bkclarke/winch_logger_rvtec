@@ -10,15 +10,13 @@
 <br>
 <form method="get" onsubmit="return validateDateRange();" class="form-inline">
     <div class="form-group mb-2">
-        <label for="start_date" class="mr-2">Start Date:</label>
-        <input type="datetime-local" id="start_date" name="start_date" class="form-control"
-               value="{{ start_date_value }}" required>
+        {{ form.start_date.label_tag }}
+        {{ form.start_date }}
     </div>
 
     <div class="form-group mb-2 ml-3">
-        <label for="end_date" class="mr-2">End Date:</label>
-        <input type="datetime-local" id="end_date" name="end_date" class="form-control"
-               value="{{ end_date_value }}" required>
+        {{ form.end_date.label_tag }}
+        {{ form.end_date }}
     </div>
 
     <div class="form-group mb-2 ml-3">
@@ -170,15 +168,43 @@
     });
 
     function validateDateRange() {
-        var startDate = new Date(document.getElementById('start_date').value);
-        var endDate = new Date(document.getElementById('end_date').value);
+        console.log("Validation function called"); // Add this line
+
+        var startDateInput = document.getElementById('start_date').value;
+        var endDateInput = document.getElementById('end_date').value;
+
+        // Check if both fields are filled
+        if (!startDateInput || !endDateInput) {
+            alert("Please fill in both date fields.");
+            return false; // Prevent form submission
+        }
+
+        var startDate = new Date(startDateInput);
+        var endDate = new Date(endDateInput);
+        var now = new Date(); // Current date
+
+        // Check if either date is in the future
+        if (startDate > now || endDate > now) {
+            alert("Dates cannot be in the future.");
+            return false; // Prevent form submission
+        }
+
+        // Check if end date is earlier than start date
+        if (endDate < startDate) {
+            alert("End date must be later than start date.");
+            return false; // Prevent form submission
+        }
+
         var oneWeekInMillis = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
 
+        // Check if date range exceeds one week
         if (endDate - startDate > oneWeekInMillis) {
             alert("Date range cannot exceed one week.");
             return false; // Prevent form submission
         }
+
         return true; // Allow form submission
     }
+
 </script>
 {% endblock content %}
