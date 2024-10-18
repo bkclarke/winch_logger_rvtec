@@ -160,7 +160,7 @@ def charts(request):
     form = DataFilterForm(initial={
         'start_date': start_date.strftime('%Y-%m-%dT%H:%M') if start_date else None,
         'end_date': end_date.strftime('%Y-%m-%dT%H:%M') if end_date else None,
-        'winch': winch.id if winch else None,
+        'winch': 'winch_2',
     })
 
     print("Form initial values:", form.initial)  # Debugging statement
