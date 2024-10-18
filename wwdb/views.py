@@ -133,8 +133,8 @@ def charts(request):
 
     else:
         # Set default values if parameters are missing
-        end_date_str='2024-09-13 14:00:00'
-        start_date_str='2024-09-14 22:00:00'
+        start_date_str='2024-09-13 14:00:00'
+        end_date_str='2024-09-14 22:00:00'
         start_date = parse_date(start_date_str)
         print(start_date)
         end_date = parse_date(end_date_str)
