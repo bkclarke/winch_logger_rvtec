@@ -139,8 +139,8 @@ def charts(request):
         print(start_date)
         end_date = parse_date(end_date_str)
         print(end_date)
-        winch = Winch.objects.last()  # Default to the last winch if none provided
-        print('default vals', end_date, start_date)
+        winch = Winch.objects.get(id=6)  # Default to the last winch if none provided
+        print('default vals', end_date, start_date, winch)
 
     # Fetch data using the retrieved parameters
     if winch:  # Only fetch data if winch is valid
@@ -160,7 +160,7 @@ def charts(request):
     form = DataFilterForm(initial={
         'start_date': start_date.strftime('%Y-%m-%dT%H:%M') if start_date else None,
         'end_date': end_date.strftime('%Y-%m-%dT%H:%M') if end_date else None,
-        'winch': 'winch_2',
+        'winch': winch,
     })
 
     print("Form initial values:", form.initial)  # Debugging statement
