@@ -3,7 +3,7 @@
 <tr>
     <td>
         {{ form.name }}
-        {{ form.name.errors}}
+        {{ form.name.errors }}
     </td>
     <td>
         {{ form.status }}
@@ -19,12 +19,10 @@
     </td>
     <td>
         <a href="#"
-           hx-post="{% url 'winchtableeditsubmit' winch.pk %}"
-           hx-target="closest tr"
-           hx-swap="outerHTML"
-           hx-include="closest tr"
+           onclick="showEditAlert(event);"
            class="btn btn-success btn-sm">
             Submit
+        </a>
     </td>
     <td>
         <a href="#"
@@ -36,3 +34,11 @@
         </a>
     </td>
 </tr>
+
+<script type="text/javascript">function showEditAlert(event) {
+        event.preventDefault(); // Prevent the default action
+        alert("Winches cannot be edited in the demo version.");
+        // Optionally, you can also implement any additional logic for cancelling the edit
+    }
+</script>
+

@@ -15,11 +15,9 @@
     </td>
     <td>
         <button class='btn btn-danger btn-sm'
-                hx-confirm='Are you sure? Deployments that have casts associated with them in the database cannot be deleted'
-                hx-target="closest tr"
-                hx-swap="outerHTML swap:1s"
-                hx-delete="{% url 'deploymenttabledelete' deployment.pk %}">
-        Delete
+                onclick="showDeleteAlert(event);">
+            Delete
         </button>
     </td>
 </tr>
+
