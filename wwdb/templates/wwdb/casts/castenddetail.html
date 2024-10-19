@@ -4,7 +4,7 @@
 {% block content %}
 </br>
 </br>
-<a href="{% url 'charts' %}?start_date={{ cast.format_startdate_url }}&end_date={{ cast.format_enddate_url }}&winch={{ cast.winch.id }}" class="btn btn-warning btn-lg btn-block">View Plot</a>
+<a href="{% url 'charts' %}?start_date={{ cast.format_startdate_csv }}&end_date={{ cast.format_enddate_csv }}&winch={{ cast.winch.id }}" class="btn btn-warning btn-lg btn-block">View Plot</a>
 </br>
 </br>
 <div class="cast-entry">
